@@ -11,22 +11,33 @@ import logging
 from pathlib import Path
 from typing import Optional
 
+APP_NAME = "Seestar FITS Organizer"
+
 
 def get_storage_path(filename: str) -> Path:
     """
     Get the appropriate storage path for a file.
-    
+
     Detects if running as a PyInstaller bundle or as a script,
     and returns the appropriate directory path.
-    
+
+    On macOS the bundled app stores data in
+    ``~/Library/Application Support/Seestar FITS Organizer``: writing inside
+    the ``.app`` bundle would break code signing and lose settings whenever
+    the app is replaced.
+
     Args:
         filename: The filename to use for the storage file
-        
+
     Returns:
         Path to the storage file location
     """
     try:
         if getattr(sys, 'frozen', False):
+            if sys.platform == 'darwin':
+                data_dir = Path.home() / "Library" / "Application Support" / APP_NAME
+                data_dir.mkdir(parents=True, exist_ok=True)
+                return data_dir / filename
             # Running as bundled executable
             return Path(sys.executable).parent / filename
         else:
