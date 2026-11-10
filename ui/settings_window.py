@@ -9,6 +9,7 @@ import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import json
 import logging
+from pathlib import Path
 
 from ui.theme import ACCENT, ACCENT_HOVER, SECONDARY, SECONDARY_HOVER, NEUTRAL, NEUTRAL_HOVER, TEXT_MUTED
 
@@ -264,6 +265,7 @@ class SettingsWindow(ctk.CTkToplevel):
         """Import location tags from a JSON file."""
         file_path = filedialog.askopenfilename(
             title="Import Location Tags",
+            initialdir=str(Path.home()),
             filetypes=[("JSON files", "*.json"), ("All files", "*.*")]
         )
         
@@ -286,6 +288,7 @@ class SettingsWindow(ctk.CTkToplevel):
         """Export location tags to a JSON file."""
         file_path = filedialog.asksaveasfilename(
             title="Export Location Tags",
+            initialdir=str(Path.home()),
             defaultextension=".json",
             filetypes=[("JSON files", "*.json"), ("All files", "*.*")]
         )
